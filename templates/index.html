@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap's CSS reference -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <title>Display</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <!-- The Head Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+        </div>
+    </nav>
+    <br>
+    <!-- End of The Head Bar -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <nav class="navbar navbar-dark bg-primary">
+                    <a class="navbar-brand mx-auto">Files</a>
+                </nav>
+                <br>
+                <form action="/process" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Example file input</label>
+                        <input type="file" class="form-control-file" name="file">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+                <br>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">File ID</th>
+                            <th scope="col">File Name</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+
+
+
+
+    <!-- JavaScript files -->
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+    <script>
+        let data = JSON.parse('{{info | tojson}}');
+        let body = document.getElementById("body");
+        if (data) {
+            for (let i = 0; i < data.length; i++) {
+                const newtr = document.createElement("tr");
+                const newID = document.createElement("td");
+                newID.innerHTML = data[i]['id'];
+                const newName = document.createElement("td");
+                newName.innerHTML = data[i]['name'];
+                const newtd = document.createElement("td");
+                const newButton = document.createElement("button");
+                newButton.innerHTML = "Download";
+                newButton.id = "btn-" + data[i]['id'];
+                newButton.className = "btn btn-primary";
+                newtd.appendChild(newButton);
+                newtr.appendChild(newID);
+                newtr.appendChild(newName);
+                newtr.appendChild(newtd);
+                body.appendChild(newtr);
+            }
+        }
+    </script>
+    <script>
+        $("button").click(function () {
+            const id_num = this.id.match(/-[0-9]*/g);
+            window.open("/download/" + id_num[0], '_blank')
+        });
+    </script>
+</body>
+
+</html>
