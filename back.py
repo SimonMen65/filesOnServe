@@ -56,4 +56,10 @@ class FilesAnubis(object):
         sql = "select name,file from Files where id = %s"
         self.cursor.execute(sql,num)
         return self.cursor.fetchone()
+    
+    def removeFile(self,num):
+        sql = "delete from Files where id = %s"
+        self.cursor.execute(sql,num)
+        self.conn.commit()
+        return
         

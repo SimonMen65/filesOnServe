@@ -12,6 +12,15 @@
 
     <title>Display</title>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        .table td {
+            text-align: center;
+        }
+
+        .table th {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,19 +41,25 @@
                 </nav>
                 <br>
                 <form action="/process" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="exampleFormControlFile1">Example file input</label>
-                        <input type="file" class="form-control-file" name="file">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="exampleFormControlFile1">Select File</label>
+                        </div>
+                        <div class="col-5">
+                            <input type="file" class="form-control-file" name="file" required>
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Upload</button>
                 </form>
                 <br>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">File ID</th>
-                            <th scope="col">File Name</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" width="80%">File Name</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="body">
@@ -79,19 +94,27 @@
         if (data) {
             for (let i = 0; i < data.length; i++) {
                 const newtr = document.createElement("tr");
-                const newID = document.createElement("td");
-                newID.innerHTML = data[i]['id'];
                 const newName = document.createElement("td");
                 newName.innerHTML = data[i]['name'];
-                const newtd = document.createElement("td");
+
+                const newDownload = document.createElement("td");
+                const newRemove = document.createElement("td");
+
                 const newButton = document.createElement("button");
                 newButton.innerHTML = "Download";
                 newButton.id = "btn-" + data[i]['id'];
                 newButton.className = "btn btn-primary";
-                newtd.appendChild(newButton);
-                newtr.appendChild(newID);
+                newDownload.appendChild(newButton);
+
+                const newButton2 = document.createElement("button");
+                newButton2.innerHTML = "Remove";
+                newButton2.id = "btnRem-" + data[i]['id'];
+                newButton2.className = "btn btn-primary";
+                newRemove.appendChild(newButton2);
+
                 newtr.appendChild(newName);
-                newtr.appendChild(newtd);
+                newtr.appendChild(newDownload);
+                newtr.appendChild(newRemove);
                 body.appendChild(newtr);
             }
         }
@@ -99,7 +122,12 @@
     <script>
         $("button").click(function () {
             const id_num = this.id.match(/-[0-9]*/g);
-            window.open("/download/" + id_num[0], '_blank')
+            const type = this.id.match(/[a-zA-z]+-/g);
+            if (type == "btnRem-") {
+                window.open("/remove/" + id_num[0], '_blank');
+            } else if (type == "btn-") {
+                window.open("/download/" + id_num[0], '_blank')
+            }
         });
     </script>
 </body>
