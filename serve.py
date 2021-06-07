@@ -29,7 +29,7 @@ def upload():
 @app.route('/download/<id_num>',methods = ['GET'])
 def download(id_num):
     file = fa.getFile(id_num[1:])
-    return send_file(io.BytesIO(file['file']),as_attachment=True,mimetype='image/jpeg',download_name = file['name'])
+    return send_file(io.BytesIO(file['file']),as_attachment=True,download_name = file['name'])
     
 @app.route('/remove/<id_num>')
 def remove(id_num):
